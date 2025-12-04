@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerador de Carta de Alteração de Titularidade</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- jsPDF + html2canvas via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <main class="container">
+    <h1>Gerador de Carta de Titularidade</h1>
+
+    <section class="form-section">
+      <form id="dataForm">
+        <div class="mode-row">
+          <label>
+            Tipo de alteração
+            <select id="transferMode">
+              <option value="pf-pf">CPF → CPF</option>
+              <option value="pj-pj">CNPJ → CNPJ</option>
+              <option value="pj-pf">CNPJ → CPF</option>
+              <option value="pf-pj">CPF → CNPJ</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid">
+          <label>
+            <input type="text" id="dataLocal" placeholder="Cidade dd de mm de aaaa" value="Cidade dd de mm de aaaa" required />
+          </label>
+
+          <label>
+            <span id="labelNomeTitularAtual">Nome do titular atual</span>
+            <input type="text" id="nomeTitularAtual" required />
+          </label>
+
+          <label>
+            <span id="labelRgIeTitularAtual">RG do titular atual</span>
+            <input type="text" id="rgTitularAtual" required />
+          </label>
+
+          <label>
+            <span id="labelCpfCnpjTitularAtual">CPF do titular atual</span>
+            <input type="text" id="cpfTitularAtual" required />
+          </label>
+
+          <label>
+            Rua/Avenida/Beco/etc
+            <input type="text" id="logradouro" required />
+          </label>
+
+          <label>
+            Número
+            <input type="text" id="numero" required />
+          </label>
+
+          <label>
+            Complemento
+            <input type="text" id="complemento" />
+          </label>
+
+          <label>
+            Bairro
+            <input type="text" id="bairro" required />
+          </label>
+
+          <label>
+            Cidade
+            <input type="text" id="cidade" required />
+          </label>
+
+          <label>
+            <span id="labelNomeNovoTitular">Nome do novo titular</span>
+            <input type="text" id="nomeNovoTitular" required />
+          </label>
+
+          <label>
+            <span id="labelRgIeNovoTitular">RG do novo titular</span>
+            <input type="text" id="rgNovoTitular" required />
+          </label>
+
+          <label>
+            <span id="labelCpfCnpjNovoTitular">CPF do novo titular</span>
+            <input type="text" id="cpfNovoTitular" required />
+          </label>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="previewBtn">Prever Carta</button>
+          <button type="button" id="pdfBtn" class="primary">Gerar PDF</button>
+          <button type="button" id="clearBtn">Limpar Campos</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="preview-section">
+      <h2>Prévia</h2>
+      <div id="letter" class="letter A4">
+        <header class="letter-header">
+          <div class="date" id="previewDataLocal">Carangola dd de mm de aaaa.</div>
+        </header>
+
+        <h1 class="destinatario">À <span class="user-input" id="pDestinatario">[Destinatário]</span></h1>
+
+        <p>
+          Eu, <span class="user-input" id="pNomeTitularAtual">[Nome do titular atual]</span>, portador(a) do <span id="pLabelRgIeAtual">RG</span> nº
+          <span class="user-input" id="pRgTitularAtual">[RG do titular atual]</span> e <span id="pLabelCpfCnpjAtual">CPF</span> nº
+          <span class="user-input" id="pCpfTitularAtual">[CPF do titular atual]</span>, venho, por meio desta, solicitar
+          a <strong>alteração de titularidade</strong> dos serviços de comunicação multimídia,
+          atualmente instalados no endereço <span class="user-input" id="pLogradouro">[Rua/Avenida/Beco/etc]</span>, nº
+          <span class="user-input" id="pNumero">[Número]</span>, <span class="user-input" id="pComplemento">[Complemento]</span> – Bairro
+          <span class="user-input" id="pBairro">[Bairro]</span> – <span class="user-input" id="pCidade">[Cidade]</span>, para o nome
+          de <span class="user-input" id="pNomeNovoTitular">[Nome do novo titular]</span>, portador(a) do <span id="pLabelRgIeNovo">RG</span> nº
+          <span class="user-input" id="pRgNovoTitular">[RG do novo titular]</span> e <span id="pLabelCpfCnpjNovo">CPF</span> nº
+          <span class="user-input" id="pCpfNovoTitular">[CPF do novo titular]</span>.
+        </p>
+
+        <p>
+          Solicito que a alteração seja realizada com a devida atualização cadastral e
+          responsabilização contratual em nome do novo titular a partir desta data.
+        </p>
+
+        <p>Sem mais, renovo votos de consideração.</p>
+
+        <p><strong>Atenciosamente,</strong></p>
+
+        <div class="assinatura">
+          <div class="linha"></div>
+          <div class="nomeCpf">
+            <span class="user-input" id="aNomeTitularAtual">[Nome do titular atual]</span>
+            <span id="aLabelCpfCnpj">CPF</span>: <span class="user-input" id="aCpfTitularAtual">[CPF do titular atual]</span>
+          </div>
+        </div>
+
+        <footer class="letter-footer">
+          <div>
+            
+          </div>
+        </footer>
+      </div>
+              <label>
+                Destinatário
+                <input type="text" id="destinatario" placeholder="Ex.: Setor Comercial" />
+              </label>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
